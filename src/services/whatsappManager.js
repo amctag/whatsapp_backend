@@ -139,29 +139,19 @@ const createWhatsAppClient = async (clientId, options = {}) => {
     process.env.CHROME_BIN ||
     resolveBundledChromePath();
 
-  // const puppeteerConfig = {
-  //   headless: true,
-  //   args: [
-  //     '--no-sandbox',
-  //     '--disable-setuid-sandbox',
-  //     '--disable-dev-shm-usage',
-  //     '--disable-accelerated-2d-canvas',
-  //     '--no-first-run',
-  //     '--no-zygote',
-  //     '--disable-gpu'
-  //   ]
-  // };
-const puppeteerConfig = {
-  headless: true,
-  args: [
-    '--no-sandbox',
-    '--disable-setuid-sandbox',
-    '--disable-dev-shm-usage',
-    '--disable-gpu',
-    '--no-zygote',
-    '--single-process'
-  ]
-};
+  const puppeteerConfig = {
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--no-first-run',
+      '--no-zygote',
+      '--disable-gpu'
+    ]
+  };
+
   if (chromeExecutablePath) {
     puppeteerConfig.executablePath = chromeExecutablePath;
     console.log(`Using Chrome executable at: ${chromeExecutablePath}`);
