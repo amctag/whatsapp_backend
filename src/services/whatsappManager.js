@@ -21,13 +21,6 @@ const getInitMaxRetries = () => Math.max(0, parseEnvInt('WA_INIT_MAX_RETRIES', 2
 const getInitRetryBaseDelayMs = () => Math.max(1000, parseEnvInt('WA_INIT_RETRY_BASE_DELAY_MS', 5000));
 const getInitRetryMaxDelayMs = () => Math.max(1000, parseEnvInt('WA_INIT_RETRY_MAX_DELAY_MS', 30000));
 
-// const getDefaultSessionsDir = () => {
-//   // On cloud hosts, app directory may be ephemeral/restricted.
-//   if (process.env.NODE_ENV === 'production') {
-//     return path.join(os.tmpdir(), 'wwebjs-sessions');
-//   }
-//   return path.resolve(__dirname, '../../sessions');
-// };
 const getDefaultSessionsDir = () => {
   if (process.env.SESSIONS_DIR) {
     return path.resolve(process.env.SESSIONS_DIR);
@@ -146,24 +139,34 @@ const createWhatsAppClient = async (clientId, options = {}) => {
     process.env.CHROME_BIN ||
     resolveBundledChromePath();
 
-  const puppeteerConfig = {
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-accelerated-2d-canvas',
-      '--no-first-run',
-      '--no-zygote',
-      '--disable-gpu'
-    ]
-  };
-
+  // const puppeteerConfig = {
+  //   headless: true,
+  //   args: [
+  //     '--no-sandbox',
+  //     '--disable-setuid-sandbox',
+  //     '--disable-dev-shm-usage',
+  //     '--disable-accelerated-2d-canvas',
+  //     '--no-first-run',
+  //     '--no-zygote',
+  //     '--disable-gpu'
+  //   ]
+  // };
+const puppeteerConfig = {
+  headless: true,
+  args: [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-zygote',
+    '--single-process'
+  ]
+};
   if (chromeExecutablePath) {
     puppeteerConfig.executablePath = chromeExecutablePath;
     console.log(`Using Chrome executable at: ${chromeExecutablePath}`);
   }
-
+const profilePath = path.join(SESSIONS_DIR, `chrome-${clientId}`);
   const wClient = new Client({
     authStrategy: new LocalAuth({
       clientId: clientId,
