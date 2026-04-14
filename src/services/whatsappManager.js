@@ -127,7 +127,7 @@ const createWhatsAppClient = async (clientId, options = {}) => {
 
   if (forceReauth && attempt === 1) {
     console.log(`Clearing stale session data for ${clientId}`);
-    clearClientSessionData(clientId);
+    // clearClientSessionData(clientId);
     await WhatsAppClientModel.findOneAndUpdate(
       { clientId },
       { status: 'disconnected', qrCode: null, phone: '' }
